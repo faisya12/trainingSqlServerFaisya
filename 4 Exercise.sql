@@ -6,20 +6,21 @@ WITH SalesCTE AS (
 	SELECT FORMAT(SaleDate, 'yyyy-MMM') as Bulan, sum(Amount) as totalPenjualan
 	FROM Sales
 	GROUP BY FORMAT(SaleDate, 'yyyy-MMM')
+),
+
+maxCTE as (
+	SELECT MAX(totalPenjualan) as maxPenjualan FROM SalesCTE
 )
-
-
 
 SELECT 
 	Bulan,
 	totalPenjualan,
 	CASE 
-		WHEN totalPenjualan = (SELECT TOP 1 totalPenjualan FROM SalesCTE ORDER BY totalPenjualan DESC) THEN 'Ya'
+		WHEN totalPenjualan = maxPenjualan THEN 'Ya'
 		ELSE 'Tidak'
 	END as IndikasiPenjualanTertinggi
-FROM SalesCTE
-GROUP BY Bulan, totalPenjualan
-	
+FROM SalesCTE,maxCTE
+GROUP BY Bulan, totalPenjualan, maxPenjualan
 	
 
 --2.Buatlah sebuah query untuk menghitung total penjualan per karyawan, termasuk hanya karyawan yang memiliki penjualan lebih besar dari rata-rata semua penjualan.
