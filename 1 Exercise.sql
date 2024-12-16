@@ -22,7 +22,7 @@ FROM Transaksi
 Soal:
 Hitung total jam kerja setiap karyawan dalam format XX jam YY menit.
 
-select NamaKaryawan, CONCAT(DATEDIFF(HOur, JamMasuk, JamKeluar),'jam',DATEDIFF(MINUTE, JamMasuk, JamKeluar)%60,'menit') as JamKerja from Presensi
+select NamaKaryawan, CONCAT(DATEDIFF(HOUR, JamMasuk, JamKeluar),'jam',DATEDIFF(MINUTE, JamMasuk, JamKeluar)%60,'menit') as JamKerja from Presensi
 
 
 
