@@ -29,7 +29,7 @@ BEGIN TRANSACTION
 		CASE 
 			WHEN EXISTS (SELECT 1 FROM Bookings WHERE RoomID = @roomId AND BookingStatus = 'Active' AND ((CheckInDate BETWEEN @checkInDate AND @checkOutDate) OR (@checkOutDate BETWEEN CheckInDate AND CheckOutDate) OR (@checkInDate BETWEEN CheckInDate AND CheckOutDate)) ) THEN 'Not Available'
             ELSE 'Available'
-		END 
+		END AS Ketersediaan
     FROM Bookings
 
 COMMIT;
