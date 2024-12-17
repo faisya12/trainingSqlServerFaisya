@@ -3,8 +3,13 @@
 
 -- Buat tiga pengguna: User_A, User_B, dan Manager.
 CREATE LOGIN User_A WITH PASSWORD = 'Password123';
+CREATE USER User_A FOR LOGIN User_A;
+
 CREATE LOGIN User_B WITH PASSWORD = 'Password123';
+CREATE USER User_B FOR LOGIN User_B;
+
 CREATE LOGIN Manager WITH PASSWORD = 'Password123';
+CREATE USER Manager FOR LOGIN Manager;
 
 -- Berikan User_A izin SELECT pada tabel Penjualan.
 GRANT SELECT ON Penjualan TO User_A;
@@ -29,7 +34,7 @@ DENY DELETE ON Penjualan TO User_A;
 -- Tugas:
 
 -- Cabut izin SELECT dari User_A pada tabel Penjualan.
-
+REVOKE SELECT ON Penjualan FROM User_A;
 
 
 -- 4. Menggunakan Peran Tetap di Database
@@ -37,15 +42,17 @@ DENY DELETE ON Penjualan TO User_A;
 
 -- Berikan User_B peran db_datareader untuk database ini.
 
-
+EXEC sp_addrolemember 'db_datareader', 'User_B';
 
 
 -- 5. Membuat dan Mengelola Peran Khusus
 -- Tugas:
 
 -- Buat peran khusus AksesBacaSaja dan berikan izin SELECT pada semua tabel dalam database.
+CREATE ROLE AksesBacaSaja;
+GRANT SELECT ON SCHEMA::dbo TO AksesBacaSaja;
 
-
+EXEC sp_addrolemember 'AksesBacaSaja', 'User_A';
 
 
 -- 6. Audit Izin Pengguna
@@ -53,7 +60,10 @@ DENY DELETE ON Penjualan TO User_A;
 
 -- Tampilkan laporan semua pengguna dan perannya di database ini.
 
-
+SELECT a.name as NamaPengguna, b.name as NamaPeran
+FROM sys.database_principals a
+JOIN sys.database_role_members c on a.principal_id = c.principal_id
+JOIN sys.database_principals b on b.principal_id = c.principal_id
 
 -- 7. Konfigurasi Akses Minimum (Least Privilege)
 -- Skenario:
